@@ -86,5 +86,6 @@ To populate the database run the command ```php artisan db:seed``` in the filmin
 * Now an entry should be in the ```APP_KEY``` in the file ```.env```
 * Execute ```npm run dev``` also in the terminal in PHPStorm
 * Execute ```php artisan migrate``` in the terminal in PHPStorm this creates the tables
+* Execute ```php artisan db:seed``` to fill the tables with values
 * Run ```php artisan serve``` in the PHPStorm terminal
 * Now follow http://127.0.0.1:8000 
