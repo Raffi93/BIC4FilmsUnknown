@@ -75,17 +75,3 @@ It is also possible to run ```npm run watch``` so it is not need to execute ```n
 
 To make starting developing fast there are some seeders implemented to fill all needed tables except the user table.
 To populate the database run the command ```php artisan db:seed``` in the filminal in project root folder.
-
-### Install
-
-* Clone project via git-bash or git-GUI
-* Copy the database-file in the folder ```database```
-* Start cmd and navigate to the project folder and run ```composer install``` and ```npm install```
-* Open project with PHPStorm
-* Rename ```.env.example``` to ```.env``` and run ```php artisan key:generate``` in the terminal in PHPStorm 
-* Now an entry should be in the ```APP_KEY``` in the file ```.env```
-* Execute ```npm run dev``` also in the terminal in PHPStorm
-* Execute ```php artisan migrate``` in the terminal in PHPStorm this creates the tables
-* Execute ```php artisan db:seed``` to fill the tables with values
-* Run ```php artisan serve``` in the PHPStorm terminal
-* Now follow http://127.0.0.1:8000 
