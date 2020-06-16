@@ -54,6 +54,7 @@
                 catch (e) {
                     console.log(e)
                 }
+
                 /*
                 let name = this.name;
                 let description = this.description;
