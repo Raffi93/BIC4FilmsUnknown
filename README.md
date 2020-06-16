@@ -16,6 +16,7 @@ All routes that are needed are implemented:
  * **POST** ```/actor``` &rarr; Stores new actors
  * **GET** ```/actor/{slug}``` &rarr; Show actor
  * **PUT** ```/actor/{slug}``` &rarr; Update actor
+ * **DELETE** ```/actor/{slug}``` &rarr; Delete actor
  * **GET** ```/actor/{slug}/edit``` &rarr; Edit actor
  * **GET** ```/search/actor``` &rarr; Search actors
  * **POST** ```/search/actor``` &rarr; Query actors
@@ -24,6 +25,7 @@ All routes that are needed are implemented:
  * **POST** ```/film``` &rarr; Stores new film
  * **GET** ```/film/{slug}``` &rarr; Show film
  * **PUT** ```/film/{slug}``` &rarr; Update film
+ * **DELETE** ```/film/{slug}``` &rarr; Delete film
  * **GET** ```/film/{slug}/edit``` &rarr; Edit film
 
 All views can be found in ```/resources/views```.
@@ -32,8 +34,8 @@ All views can be found in ```/resources/views```.
 
 #### VueJS
 
-Implement your [VueJS](https://vue.js) components in the folder ```/resources/views/js/components```.
-Register your components in ```/resources/views/js/app.js``` and use them in the following files:
+Implement your [VueJS](https://vuejs.org) components in the folder ```/resources/js/components```.
+Register your components in ```/resources/js/app.js``` and use them in the following files:
 
  * ```/resources/views/film```
      * ```/resources/views/film/create.blade.php```
