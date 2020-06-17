@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Film;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class FilmController extends Controller
 {
@@ -47,6 +48,16 @@ class FilmController extends Controller
      */
     public function store(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|unique:App\Film,name',
+            'description' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return  response(['message' => "Error: Validation Failed!"], 200)
+                ->header('Content-Type', 'application/json');
+        }
+
         return Film::create($request->validate([
             'name' => 'required',
             'description' => 'required'
