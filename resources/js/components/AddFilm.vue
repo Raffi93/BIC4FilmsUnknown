@@ -46,13 +46,17 @@
                     }
                     let form = new Form(data);
                     form.post('/film').then(value => {
-                        console.log(value)
+                        console.log(value.message)
+                        if (value.message.indexOf("Error") >= 0) {
+                            alert(value.message)
+                        }
                     }).catch(reason => {
-                        console.log(reason)
+                        console.log("Reason: " + reason)
+                        alert(reason);
                     })
                 }
                 catch (e) {
-                    console.log(e)
+                    console.log("Exc: " + e)
                 }
 
                 /*
