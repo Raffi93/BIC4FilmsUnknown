@@ -14,14 +14,14 @@
         <nav aria-label="Page navigation">
             <ul class="pagination">
                 <li  v-if="pagination.prev_page_url" class="page-item">
-                    <a class="page-link" href="#" @click="fetchActors(pagination.prev_page_url)">Previous</a></li>
+                    <a class="pagination-previous" href="#" @click="fetchActors(pagination.prev_page_url)">Previous</a></li>
                 <li  v-else class="page-item">
                     <span>Previous</span></li>
 
                 <li class="page-item is-disabled"><a class="page-link has-text-dark" href="#" >Page {{pagination.current_page}} of {{pagination.last_page}}</a></li>
 
                 <li v-if="pagination.next_page_url" class="page-item">
-                    <a class="page-link" href="#" @click="fetchActors(pagination.next_page_url)">Next</a></li>
+                    <a class="pagination-next" href="#" @click="fetchActors(pagination.next_page_url)">Next</a></li>
                 <li  v-else class="page-item">
                     <span>Next</span></li>
             </ul>
