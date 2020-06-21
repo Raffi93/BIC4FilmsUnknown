@@ -71,15 +71,16 @@
                         description: this.description
                     }
                     let form = new Form(data);
-                    form.post('/film').then(value => {
+                    form.post('/film').then(res => {
 
-                        if (value.message.indexOf("Error") >= 0) {
-                            this.errorMessage = value.message;
+                        if (res.message.indexOf("Error") >= 0) {
+                            this.errorMessage = res.message;
+                            console.log(res.error);
                             this.isActive = true;
                             this.notificationClass = "danger";
                         }
                         else {
-                            this.errorMessage = value.message;
+                            this.errorMessage = res.message;
                             this.isActive = true;
                             this.notificationClass = "success";
                             this.name = '';

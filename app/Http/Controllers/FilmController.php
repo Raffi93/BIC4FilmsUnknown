@@ -70,7 +70,7 @@ class FilmController extends Controller
                 ->header('Content-Type', 'application/json');
 
         } catch (\Exception $e) {
-            return response(['message' => "Error during adding Film! Error: " . $e->getMessage()], 200)
+            return response(['message' => "Error during adding Film!", 'error' => "Error: " . $e->getMessage()], 200)
                 ->header('Content-Type', 'application/json');
         }
     }
@@ -130,7 +130,7 @@ class FilmController extends Controller
                 ->header('Content-Type', 'application/json');
 
         } catch (\Exception $e) {
-            return response(['message' => "Error during update! Error: " . $e->getMessage()], 200)
+            return response(['message' => "Error during update!", 'error' => "Error: " . $e->getMessage()], 200)
                 ->header('Content-Type', 'application/json');
         }
     }

@@ -72,7 +72,7 @@ class ActorController extends Controller
                 ->header('Content-Type', 'application/json');
 
         } catch (\Exception $e) {
-            return response(['message' => "Error during adding Actor! Error: " . $e->getMessage()], 200)
+            return response(['message' => "Error during adding Actor!", 'error' => "Error: " . $e->getMessage()], 200)
                 ->header('Content-Type', 'application/json');
         }
     }
@@ -133,7 +133,7 @@ class ActorController extends Controller
                 ->header('Content-Type', 'application/json');
 
         } catch (\Exception $e) {
-            return response(['message' => "Error during delete! Error: " . $e->getMessage()], 200)
+            return response(['message' => "Error during delete!", 'error' => "Error: " . $e->getMessage()], 200)
                 ->header('Content-Type', 'application/json');
         }
     }

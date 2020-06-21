@@ -187,6 +187,7 @@
                     form.put('/actor/' + actor.slug).then(res => {
                         if (res.message.indexOf("Error") >= 0) {
                             this.errorMessage = res.message;
+                            console.log(res.error);
                             this.isActiveNotification = true;
                             this.notificationClass = "danger";
                         } else {

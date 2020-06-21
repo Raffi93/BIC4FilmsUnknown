@@ -11763,3 +11763,33 @@ label.panel-block:hover {
   min-height: calc(100vh - 6.75rem);
 }
 
+/** css für checkbox**/
+
+input.hackbox {
+  display: none;
+}
+
+input.liste:checked ~ span.test {
+  display: inline;
+}
+
+input.liste:checked ~ span.test2 {
+  display: none;
+}
+
+span.test {
+  display: none;
+}
+
+label.liste::before {
+  content: " Liste anzeigen";
+  color: #0091D2;
+  cursor: pointer;
+}
+
+input.liste:checked ~ label.liste::before {
+  content: " Paginate anzeigen";
+  color: #0091D2;
+  cursor: pointer;
+}
+

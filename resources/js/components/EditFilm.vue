@@ -147,14 +147,15 @@
                         description: film.description,
                     }
                     let form = new Form(data);
-                    form.put('/film/' + film.slug).then(value => {
+                    form.put('/film/' + film.slug).then(res => {
 
-                        if (value.message.indexOf("Error") >= 0) {
-                            this.errorMessage = value.message;
+                        if (res.message.indexOf("Error") >= 0) {
+                            this.errorMessage = res.message;
+                            console.log(res.error);
                             this.isActiveNotification = true;
                             this.notificationClass = "danger";
                         } else {
-                            this.errorMessage = value.message;
+                            this.errorMessage = res.message;
                             this.isActiveNotification = true;
                             this.notificationClass = "success";
                             this.name = '';
