@@ -25,9 +25,9 @@ class FilmController extends Controller
      */
     public function index()
     {
-        $films = Film::all()->load('actors');
+        $film = Film::all()->load('actors');
 
-        return view('film.index', compact('films'));
+        return view('film.index', compact('film'));
     }
 
     /**
@@ -48,20 +48,31 @@ class FilmController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|unique:App\Film,name',
-            'description' => 'required',
-        ]);
+        try {
+            $validator = Validator::make($request->all(), [
+                'name' => 'required|unique:App\Film,name',
+                'description' => 'required',
+            ]);
 
-        if ($validator->fails()) {
-            return  response(['message' => "Error: Validation Failed!"], 200)
+            if ($validator->fails()) {
+                return response(['message' => "Error: Validation Failed!"], 200)
+                    ->header('Content-Type', 'application/json');
+            }
+
+            $create = Film::create($request->validate([
+                'name' => 'required',
+                'description' => 'required'
+            ]));
+
+            $create->{"message"} = "Film successfully added!";
+
+            return response($create, 200)
+                ->header('Content-Type', 'application/json');
+
+        } catch (\Exception $e) {
+            return response(['message' => "Error during adding Film! Error: " . $e->getMessage()], 200)
                 ->header('Content-Type', 'application/json');
         }
-
-        return Film::create($request->validate([
-            'name' => 'required',
-            'description' => 'required'
-        ]));
     }
 
     /**
@@ -95,10 +106,33 @@ class FilmController extends Controller
      */
     public function update(Request $request, Film $film)
     {
-        return $film->update($request->validate([
-            'name' => 'required',
-            'description' => 'required'
-        ]));
+        try {
+            $validator = Validator::make($request->all(), [
+                'name' => 'required',
+                'description' => 'required'
+            ]);
+
+            if ($validator->fails()) {
+                return response(['message' => "Error: Validation Failed!"], 200)
+                    ->header('Content-Type', 'application/json');
+            }
+
+            if ($film->update($request->validate([
+                'name' => 'required',
+                'description' => 'required'
+            ]))) {
+
+                return response(['message' => "Film successfully updated!"], 200)
+                    ->header('Content-Type', 'application/json');
+            }
+
+            return response(['message' => "Error during update!"], 200)
+                ->header('Content-Type', 'application/json');
+
+        } catch (\Exception $e) {
+            return response(['message' => "Error during update! Error: " . $e->getMessage()], 200)
+                ->header('Content-Type', 'application/json');
+        }
     }
 
     /**
@@ -109,7 +143,19 @@ class FilmController extends Controller
      */
     public function destroy(Film $film)
     {
-        return $film->delete();
+        try {
+            if ($film->delete()) {
+                return response(['message' => "Film deleted!"], 200)
+                    ->header('Content-Type', 'application/json');
+            }
+
+            return response(['message' => "Error during delete!"], 200)
+                ->header('Content-Type', 'application/json');
+        }
+        catch (\Exception $e) {
+            return response(['message' => "Error during delete! Error: " . $e->getMessage()], 200)
+                ->header('Content-Type', 'application/json');
+        }
     }
 
 
@@ -121,5 +167,24 @@ class FilmController extends Controller
     public function list()
     {
         return Film::all()->load('actors');
+    }
+
+    /**
+     * Display an item of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function showfilmbyslug(Request $request)
+    {
+        $search = $request->validate([
+            'search' => 'required'
+        ])['search'];
+
+        return Film::whereSlug($search)->get();
+    }
+
+    public function pageFilm()
+    {
+        return Film::with('actors')->paginate(5);
     }
 }

@@ -35,6 +35,10 @@ Vue.component('add-film', require('./components/AddFilm.vue').default);
 Vue.component('page-actor', require('./components/PaginateActor.vue').default);
 Vue.component('page-film', require('./components/PaginateFilm.vue').default);
 
+Vue.component('edit-actor', require('./components/EditActor.vue').default);
+Vue.component('search-actor', require('./components/SearchActor.vue').default);
+Vue.component('edit-film', require('./components/EditFilm.vue').default);
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
