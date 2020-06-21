@@ -4,6 +4,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -43,7 +45,8 @@
     <nav class="navbar" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
             <a class="navbar-item" href="{{ route('welcome') }}">
-                <img src="{{asset('img/Logo.png')}}" width="112" height="28">
+                <!--<img src="{{asset('img/Logo.png')}}" width="112" height="28">-->
+                <img src="https://img.icons8.com/color/48/000000/actor.png"/>
             </a>
 
             <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false"
@@ -142,7 +145,8 @@
 
     <footer class="footer">
         <div class="content has-text-centered">
-            <small>Here comes some footer</small>
+            <small>&copy; Raffael Baar, Simon Schlicker, Erik Schaffer, Markus Serloth (2020)</small>
+            <a href="https://icons8.com/icon/OsgCgd2arLwx/darsteller">Darsteller icon by Icons8</a>
         </div>
     </footer>
 </div>
