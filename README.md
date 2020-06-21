@@ -77,3 +77,7 @@ It is also possible to run ```npm run watch``` so it is not need to execute ```n
 
 To make starting developing fast there are some seeders implemented to fill all needed tables except the user table.
 To populate the database run the command ```php artisan db:seed``` in the filminal in project root folder.
+
+#### FINAL COMMIT 
+
+21.06.2020 22:18
