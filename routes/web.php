@@ -27,3 +27,9 @@ Route::post('/search/actor', 'ActorController@query')->name('actor.query');
 
 Route::get('/list/film', 'FilmController@list')->name('film.list');
 Route::get('/list/actor', 'ActorController@list')->name('actor.list');
+
+Route::get('/page/actor', 'ActorController@pageActor')->name('actor.page');
+Route::get('/page/film', 'FilmController@pageFilm')->name('film.page');
+
+Route::post('/actor/actorbyslug', 'ActorController@showactorbyslug')->name('actor.showactorbyslug');
+Route::post('/film/filmbyslug', 'FilmController@showfilmbyslug')->name('film.showfilmbyslug');

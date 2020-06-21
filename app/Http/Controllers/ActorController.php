@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Actor;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class ActorController extends Controller
 {
@@ -24,9 +25,9 @@ class ActorController extends Controller
      */
     public function index()
     {
-        $actors = Actor::all()->load('film');
+        $actor = Actor::all()->load('film');
 
-        return view('actor.index', compact('actors'));
+        return view('actor.index', compact('actor'));
     }
 
     /**
@@ -47,11 +48,33 @@ class ActorController extends Controller
      */
     public function store(Request $request)
     {
-        return Actor::create($request->validate([
-            'name' => 'required',
-            'description' => 'required',
-            'film_id' => 'required|exists:App\Film,id'
-        ]));
+        try {
+            $validator = Validator::make($request->all(), [
+                'name' => 'required|unique:App\Actor,name',
+                'description' => 'required',
+                'film_id' => 'required|exists:App\Film,id'
+            ]);
+
+            if ($validator->fails()) {
+                return  response(['message' => "Error: Validation Failed!"], 200)
+                    ->header('Content-Type', 'application/json');
+            }
+
+            $create = Actor::create($request->validate([
+                'name' => 'required',
+                'description' => 'required',
+                'film_id' => 'required|exists:App\Film,id'
+            ]));
+
+            $create->{"message"} = "Actor successfully added!";
+
+            return response($create, 200)
+                ->header('Content-Type', 'application/json');
+
+        } catch (\Exception $e) {
+            return response(['message' => "Error during adding Actor! Error: " . $e->getMessage()], 200)
+                ->header('Content-Type', 'application/json');
+        }
     }
 
     /**
@@ -85,11 +108,34 @@ class ActorController extends Controller
      */
     public function update(Request $request,Actor $actor)
     {
-        return $actor->update($request->validate([
-            'name' => 'required',
-            'description' => 'required',
-            'film_id' => 'required|exists:App\Film,id'
-        ]));
+        try {
+            $validator = Validator::make($request->all(), [
+                'name' => 'required',
+                'description' => 'required',
+                'film_id' => 'required|exists:App\Film,id'
+            ]);
+
+            if ($validator->fails()) {
+                return response(['message' => "Error: Validation Failed!"], 200)
+                    ->header('Content-Type', 'application/json');
+            }
+
+            if ($actor->update($request->validate([
+                'name' => 'required',
+                'description' => 'required',
+                'film_id' => 'required|exists:App\Film,id'
+            ]))) {
+                return response(['message' => "Actor successfully updated!"], 200)
+                    ->header('Content-Type', 'application/json');
+            }
+
+            return response(['message' => "Error during update!"], 200)
+                ->header('Content-Type', 'application/json');
+
+        } catch (\Exception $e) {
+            return response(['message' => "Error during delete! Error: " . $e->getMessage()], 200)
+                ->header('Content-Type', 'application/json');
+        }
     }
 
     /**
@@ -100,7 +146,19 @@ class ActorController extends Controller
      */
     public function destroy(Actor $actor)
     {
-        return $actor->delete();
+        try {
+            if ($actor->delete()) {
+                return response(['message' => "Actor deleted!"], 200)
+                    ->header('Content-Type', 'application/json');
+            }
+
+            return response(['message' => "Error during delete!"], 200)
+                ->header('Content-Type', 'application/json');
+        }
+        catch (\Exception $e) {
+            return response(['message' => "Error during delete! Error: " . $e->getMessage()], 200)
+                ->header('Content-Type', 'application/json');
+        }
     }
 
 
@@ -146,5 +204,24 @@ class ActorController extends Controller
     public function list()
     {
         return Actor::all()->load('film');
+    }
+
+    /**
+     * Display an item of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function showactorbyslug(Request $request)
+    {
+        $search = $request->validate([
+            'search' => 'required'
+        ])['search'];
+
+        return Actor::whereSlug($search)->with('film')->get();
+    }
+
+    public function pageActor()
+    {
+        return Actor::with('film')->paginate(5);
     }
 }

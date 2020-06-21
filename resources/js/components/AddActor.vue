@@ -18,19 +18,31 @@
                 </div>
             </div>
             <div class="field">
+                <label class="label">Film</label>
+                <div class="select">
+                    <select v-model="film_id">
+                        <option v-for="film in films" :value="film.id">
+                            {{film.name}}
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <div class="field">
                 <label class="label">Description</label>
                 <div class="control">
                     <textarea class="textarea" v-model="description" rows="5"/>
                 </div>
             </div>
             <div class="control">
-                <button @click="addFilm()" class="button is-success">Create</button>
+                <button @click="addActor()" class="button is-success">Create</button>
             </div>
         </div>
     </div>
+
 </template>
 
 <script>
+
     import Form from "../utilities/Form";
 
     export default {
@@ -50,8 +62,11 @@
                 },
             }
         },
+        created() {
+            this.fetchFilms("/list/film");
+        },
         methods: {
-            addFilm() {
+            addActor() {
                 try {
                     this.errors = [];
                     this.isActive = false;
@@ -61,6 +76,9 @@
                     if (!this.description) {
                         this.errors.push('Description required.');
                     }
+                    if (!this.film_id) {
+                        this.errors.push('Film required.');
+                    }
 
                     if (this.errors.length > 0){
                         return;
@@ -68,10 +86,11 @@
 
                     let data = {
                         name: this.name,
-                        description: this.description
+                        description: this.description,
+                        film_id: this.film_id
                     }
                     let form = new Form(data);
-                    form.post('/film').then(value => {
+                    form.post('/actor').then(value => {
 
                         if (value.message.indexOf("Error") >= 0) {
                             this.errorMessage = value.message;
@@ -84,8 +103,8 @@
                             this.notificationClass = "success";
                             this.name = '';
                             this.description = '';
+                            this.film_id = '';
                         }
-
                     }).catch(() => {
                         this.errorMessage = "Some mystic Error occurred (I think the Backend could not handle that the slug already exist) !";
                         this.isActive = true;
@@ -97,6 +116,15 @@
                     this.isActive = true;
                     this.notificationClass = "danger";
                 }
+            },
+            fetchFilms(uri) {
+                uri = uri || '/list/film'
+                fetch(uri)
+                    .then(res => res.json())
+                    .then(res => {
+                        this.films = res;
+                    })
+                    .catch(err => console.log(err));
             },
             closeNotification () {
                 this.isActive = false;
