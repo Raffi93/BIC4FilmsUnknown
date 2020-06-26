@@ -20,8 +20,9 @@
             <div class="field">
                 <label class="label">Film</label>
                 <div class="select">
-                    <select v-model="film_id">
-                        <option v-for="film in films" :value="film.id">
+                    <select v-model="film_id" :disabled="loading">
+                        <option v-if="loading" :value="film.id"> Loading...</option>
+                        <option v-if="!loading" v-for="film in films" :value="film.id">
                             {{film.name}}
                         </option>
                     </select>
@@ -130,6 +131,19 @@
             closeNotification () {
                 this.isActive = false;
             },
+        },
+        computed: {
+            loading() {
+                return !this.films.length
+            }
+        },
+
+        watch: {
+            films() {
+                if (!this.loading && this.film_id === '') {
+                    this.film_id = _.first(this.films).id;
+                }
+            }
         }
     }
 

@@ -17,6 +17,10 @@
 <script>
     export default {
         props: {
+            currentList: {
+                required: false,
+                type: Object
+            },
             enableEdit : {
                 type: Boolean
             },
@@ -36,18 +40,9 @@
             }
         },
         created() {
-            this.fetchActors("/list/actor");
+            this.actors = this.currentList;
         },
         methods: {
-            fetchActors(uri) {
-                uri = uri || '/list/actor'
-                fetch(uri)
-                    .then(res => res.json())
-                    .then(res => {
-                        this.actors = res;
-                    })
-                    .catch(err => console.log(err));
-            }
         }
     }
 </script>

@@ -52,6 +52,12 @@
     import Form from "../utilities/Form";
 
     export default {
+        props: {
+            currentFilm: {
+                required: false,
+                type: Object
+            }
+        },
         data() {
             return {
                 film: {
@@ -67,20 +73,9 @@
             }
         },
         created() {
-            this.fetchFilm("/film/filmbyslug");
+            this.film = this.currentFilm;
         },
         methods: {
-            fetchFilm: function (uri) {
-                let data = {
-                    search: location.pathname.split("/")[2]
-                }
-                let form = new Form(data);
-                form.post(uri).then(res => {
-                    this.film = res[0];
-                }).catch(error =>{
-                    console.log(error);
-                })
-            },
             deleteFilm(film) {
                 try {
                     this.errors = [];

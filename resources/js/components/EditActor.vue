@@ -19,8 +19,9 @@
         <div class="field">
             <label class="label">Film</label>
             <div class="select">
-                <select v-model="actor.film_id">
-                    <option v-for="film in films" :value="film.id">
+                <select v-model="actor.film_id" :disabled="loading">
+                    <option v-if="loading" :value="actor.film_id"> Loading...</option>
+                    <option v-if="!loading" v-for="film in films" :value="film.id">
                         {{film.name}}
                     </option>
                 </select>
@@ -62,6 +63,12 @@
     import Form from "../utilities/Form";
 
     export default {
+        props: {
+            currentActor: {
+                required: false,
+                type: Object
+            }
+        },
         data() {
             return {
                 actor: {
@@ -85,8 +92,8 @@
             }
         },
         created() {
-            this.fetchActor("/actor/actorbyslug");
             this.fetchFilms("/list/film");
+            this.actor = this.currentActor;
         },
         methods: {
             fetchFilms(uri) {
@@ -97,17 +104,6 @@
                         this.films = res;
                     })
                     .catch(err => console.log(err));
-            },
-            fetchActor: function (uri) {
-                let data = {
-                    search: location.pathname.split("/")[2]
-                }
-                let form = new Form(data);
-                form.post(uri).then(res => {
-                    this.actor = res[0];
-                }).catch(error =>{
-                    console.log(error);
-                })
             },
             deleteActor(actor) {
                 try {
@@ -217,6 +213,19 @@
             },
             closeNotification() {
                 this.isActiveNotification = false;
+            }
+        },
+        computed: {
+            loading() {
+                return !this.films.length
+            }
+        },
+
+        watch: {
+            films() {
+                if (!this.loading && this.film_id === '') {
+                    this.film_id = _.first(this.films).id;
+                }
             }
         }
     }

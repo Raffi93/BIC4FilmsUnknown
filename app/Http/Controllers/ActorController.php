@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Actor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class ActorController extends Controller
 {
@@ -48,15 +49,21 @@ class ActorController extends Controller
      */
     public function store(Request $request)
     {
+        $name = $request->input('name');
+        $slug = Str::slug($name);
+        $request->request->add(['slug' => $slug]);
+
         try {
             $validator = Validator::make($request->all(), [
                 'name' => 'required|unique:App\Actor,name',
                 'description' => 'required',
+                'slug' => 'unique:App\Actor,slug',
                 'film_id' => 'required|exists:App\Film,id'
             ]);
 
             if ($validator->fails()) {
-                return  response(['message' => "Error: Validation Failed!"], 200)
+                $error = $validator->errors()->first();
+                return  response(['message' => "Error: Validation Failed! " . $error], 200)
                     ->header('Content-Type', 'application/json');
             }
 
@@ -85,6 +92,8 @@ class ActorController extends Controller
      */
     public function show(Actor $actor)
     {
+        $actor = $actor->load('film');
+
         return view('actor.show', compact('actor'));
     }
 
@@ -96,7 +105,7 @@ class ActorController extends Controller
      */
     public function edit(Actor $actor)
     {
-        return view('actor.edit', compact($actor));
+        return view('actor.edit', compact('actor'));
     }
 
     /**
@@ -109,14 +118,21 @@ class ActorController extends Controller
     public function update(Request $request,Actor $actor)
     {
         try {
+
+            $name = $request->input('name');
+            $slug = Str::slug($name);
+            $request->request->add(['slug' => $slug]);
+
             $validator = Validator::make($request->all(), [
-                'name' => 'required',
+                'name' => 'required|unique:App\Actor,name',
                 'description' => 'required',
+                'slug' => 'unique:App\Actor,slug',
                 'film_id' => 'required|exists:App\Film,id'
             ]);
 
             if ($validator->fails()) {
-                return response(['message' => "Error: Validation Failed!"], 200)
+                $error = $validator->errors()->first();
+                return response(['message' => "Error: Validation Failed! " . $error], 200)
                     ->header('Content-Type', 'application/json');
             }
 

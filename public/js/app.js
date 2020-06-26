@@ -1952,6 +1952,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
@@ -2042,6 +2043,18 @@ __webpack_require__.r(__webpack_exports__);
     },
     closeNotification: function closeNotification() {
       this.isActive = false;
+    }
+  },
+  computed: {
+    loading: function loading() {
+      return !this.films.length;
+    }
+  },
+  watch: {
+    films: function films() {
+      if (!this.loading && this.film_id === '') {
+        this.film_id = _.first(this.films).id;
+      }
     }
   }
 });
@@ -2235,8 +2248,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+  props: {
+    currentActor: {
+      required: false,
+      type: Object
+    }
+  },
   data: function data() {
     return {
       actor: {
@@ -2260,8 +2280,8 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   created: function created() {
-    this.fetchActor("/actor/actorbyslug");
     this.fetchFilms("/list/film");
+    this.actor = this.currentActor;
   },
   methods: {
     fetchFilms: function fetchFilms(uri) {
@@ -2276,21 +2296,8 @@ __webpack_require__.r(__webpack_exports__);
         return console.log(err);
       });
     },
-    fetchActor: function fetchActor(uri) {
-      var _this2 = this;
-
-      var data = {
-        search: location.pathname.split("/")[2]
-      };
-      var form = new _utilities_Form__WEBPACK_IMPORTED_MODULE_0__["default"](data);
-      form.post(uri).then(function (res) {
-        _this2.actor = res[0];
-      })["catch"](function (error) {
-        console.log(error);
-      });
-    },
     deleteActor: function deleteActor(actor) {
-      var _this3 = this;
+      var _this2 = this;
 
       try {
         this.errors = [];
@@ -2320,24 +2327,24 @@ __webpack_require__.r(__webpack_exports__);
         var form = new _utilities_Form__WEBPACK_IMPORTED_MODULE_0__["default"](data);
         form["delete"]('/actor/' + actor.slug).then(function (value) {
           if (value.message.indexOf("Error") >= 0) {
-            _this3.errorMessage = value.message;
-            _this3.isActiveNotification = true;
-            _this3.notificationClass = "danger";
+            _this2.errorMessage = value.message;
+            _this2.isActiveNotification = true;
+            _this2.notificationClass = "danger";
           } else {
-            _this3.closeModal();
+            _this2.closeModal();
 
-            _this3.errorMessage = value.message;
-            _this3.isActiveNotification = true;
-            _this3.notificationClass = "success";
+            _this2.errorMessage = value.message;
+            _this2.isActiveNotification = true;
+            _this2.notificationClass = "success";
             actor.name = '';
             actor.description = '';
             actor.film_id = '';
-            _this3.disabled = 1;
+            _this2.disabled = 1;
           }
         })["catch"](function () {
-          _this3.errorMessage = "Some mystic Error occurred!";
-          _this3.isActiveNotification = true;
-          _this3.notificationClass = "danger";
+          _this2.errorMessage = "Some mystic Error occurred!";
+          _this2.isActiveNotification = true;
+          _this2.notificationClass = "danger";
         });
       } catch (e) {
         this.errorMessage = e;
@@ -2346,7 +2353,7 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     editActor: function editActor(actor) {
-      var _this4 = this;
+      var _this3 = this;
 
       try {
         this.errors = [];
@@ -2376,22 +2383,22 @@ __webpack_require__.r(__webpack_exports__);
         var form = new _utilities_Form__WEBPACK_IMPORTED_MODULE_0__["default"](data);
         form.put('/actor/' + actor.slug).then(function (res) {
           if (res.message.indexOf("Error") >= 0) {
-            _this4.errorMessage = res.message;
+            _this3.errorMessage = res.message;
             console.log(res.error);
-            _this4.isActiveNotification = true;
-            _this4.notificationClass = "danger";
+            _this3.isActiveNotification = true;
+            _this3.notificationClass = "danger";
           } else {
-            _this4.errorMessage = res.message;
-            _this4.isActiveNotification = true;
-            _this4.notificationClass = "success";
-            _this4.name = '';
-            _this4.description = '';
-            _this4.film_id = '';
+            _this3.errorMessage = res.message;
+            _this3.isActiveNotification = true;
+            _this3.notificationClass = "success";
+            _this3.name = '';
+            _this3.description = '';
+            _this3.film_id = '';
           }
         })["catch"](function (res) {
-          _this4.errorMessage = "Some mystic Error occurred! Error: " + res;
-          _this4.isActiveNotification = true;
-          _this4.notificationClass = "danger";
+          _this3.errorMessage = "Some mystic Error occurred! Error: " + res;
+          _this3.isActiveNotification = true;
+          _this3.notificationClass = "danger";
         });
       } catch (e) {
         this.errorMessage = e;
@@ -2407,6 +2414,18 @@ __webpack_require__.r(__webpack_exports__);
     },
     closeNotification: function closeNotification() {
       this.isActiveNotification = false;
+    }
+  },
+  computed: {
+    loading: function loading() {
+      return !this.films.length;
+    }
+  },
+  watch: {
+    films: function films() {
+      if (!this.loading && this.film_id === '') {
+        this.film_id = _.first(this.films).id;
+      }
     }
   }
 });
@@ -2475,6 +2494,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+  props: {
+    currentFilm: {
+      required: false,
+      type: Object
+    }
+  },
   data: function data() {
     return {
       film: {
@@ -2490,24 +2515,11 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   created: function created() {
-    this.fetchFilm("/film/filmbyslug");
+    this.film = this.currentFilm;
   },
   methods: {
-    fetchFilm: function fetchFilm(uri) {
-      var _this = this;
-
-      var data = {
-        search: location.pathname.split("/")[2]
-      };
-      var form = new _utilities_Form__WEBPACK_IMPORTED_MODULE_0__["default"](data);
-      form.post(uri).then(function (res) {
-        _this.film = res[0];
-      })["catch"](function (error) {
-        console.log(error);
-      });
-    },
     deleteFilm: function deleteFilm(film) {
-      var _this2 = this;
+      var _this = this;
 
       try {
         this.errors = [];
@@ -2532,23 +2544,23 @@ __webpack_require__.r(__webpack_exports__);
         var form = new _utilities_Form__WEBPACK_IMPORTED_MODULE_0__["default"](data);
         form["delete"]('/film/' + film.slug).then(function (value) {
           if (value.message.indexOf("Error") >= 0) {
-            _this2.errorMessage = value.message;
-            _this2.isActiveNotification = true;
-            _this2.notificationClass = "danger";
+            _this.errorMessage = value.message;
+            _this.isActiveNotification = true;
+            _this.notificationClass = "danger";
           } else {
-            _this2.closeModal();
+            _this.closeModal();
 
-            _this2.errorMessage = value.message;
-            _this2.isActiveNotification = true;
-            _this2.notificationClass = "success";
+            _this.errorMessage = value.message;
+            _this.isActiveNotification = true;
+            _this.notificationClass = "success";
             film.name = '';
             film.description = '';
-            _this2.disabled = 1;
+            _this.disabled = 1;
           }
         })["catch"](function () {
-          _this2.errorMessage = "Some mystic Error occurred!";
-          _this2.isActiveNotification = true;
-          _this2.notificationClass = "danger";
+          _this.errorMessage = "Some mystic Error occurred!";
+          _this.isActiveNotification = true;
+          _this.notificationClass = "danger";
         });
       } catch (e) {
         this.errorMessage = e;
@@ -2557,7 +2569,7 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     editFilm: function editFilm(film) {
-      var _this3 = this;
+      var _this2 = this;
 
       try {
         this.errors = [];
@@ -2582,22 +2594,22 @@ __webpack_require__.r(__webpack_exports__);
         var form = new _utilities_Form__WEBPACK_IMPORTED_MODULE_0__["default"](data);
         form.put('/film/' + film.slug).then(function (res) {
           if (res.message.indexOf("Error") >= 0) {
-            _this3.errorMessage = res.message;
+            _this2.errorMessage = res.message;
             console.log(res.error);
-            _this3.isActiveNotification = true;
-            _this3.notificationClass = "danger";
+            _this2.isActiveNotification = true;
+            _this2.notificationClass = "danger";
           } else {
-            _this3.errorMessage = res.message;
-            _this3.isActiveNotification = true;
-            _this3.notificationClass = "success";
-            _this3.name = '';
-            _this3.description = '';
-            _this3.film_id = '';
+            _this2.errorMessage = res.message;
+            _this2.isActiveNotification = true;
+            _this2.notificationClass = "success";
+            _this2.name = '';
+            _this2.description = '';
+            _this2.film_id = '';
           }
         })["catch"](function (test) {
-          _this3.errorMessage = "Some mystic Error occurred!";
-          _this3.isActiveNotification = true;
-          _this3.notificationClass = "danger";
+          _this2.errorMessage = "Some mystic Error occurred!";
+          _this2.isActiveNotification = true;
+          _this2.notificationClass = "danger";
         });
       } catch (e) {
         this.errorMessage = e;
@@ -2680,6 +2692,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
+    currentList: {
+      required: false,
+      type: Object
+    },
     enableEdit: {
       type: Boolean
     },
@@ -2699,22 +2715,9 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   created: function created() {
-    this.fetchActors("/list/actor");
+    this.actors = this.currentList;
   },
-  methods: {
-    fetchActors: function fetchActors(uri) {
-      var _this = this;
-
-      uri = uri || '/list/actor';
-      fetch(uri).then(function (res) {
-        return res.json();
-      }).then(function (res) {
-        _this.actors = res;
-      })["catch"](function (err) {
-        return console.log(err);
-      });
-    }
-  }
+  methods: {}
 });
 
 /***/ }),
@@ -2746,6 +2749,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
+    currentList: {
+      required: false,
+      type: Object
+    },
     enableEdit: {
       type: Boolean
     },
@@ -2765,7 +2772,8 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   created: function created() {
-    this.fetchFilms("/list/film");
+    //this.fetchFilms("/list/film");
+    this.films = this.currentList;
   },
   methods: {
     fetchFilms: function fetchFilms(uri) {
@@ -3136,14 +3144,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+  props: {
+    currentActor: {
+      required: false,
+      type: Object
+    }
+  },
   data: function data() {
     return {
       actor: {
@@ -3160,24 +3168,10 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   created: function created() {
-    this.fetchActor("/actor/actorbyslug");
+    this.actor = this.currentActor;
+    this.film = this.currentActor.film;
   },
-  methods: {
-    fetchActor: function fetchActor(uri) {
-      var _this = this;
-
-      var data = {
-        search: location.pathname.split("/")[2]
-      };
-      var form = new _utilities_Form__WEBPACK_IMPORTED_MODULE_0__["default"](data);
-      form.post(uri).then(function (res) {
-        _this.actor = res[0];
-        _this.film = res[0].film;
-      })["catch"](function (error) {
-        console.log(error);
-      });
-    }
-  }
+  methods: {}
 });
 
 /***/ }),
@@ -3214,14 +3208,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+  props: {
+    currentFilm: {
+      required: false,
+      type: Object
+    }
+  },
   data: function data() {
     return {
       film: {
@@ -3231,23 +3225,9 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   created: function created() {
-    this.fetchFilm("/film/filmbyslug");
+    this.film = this.currentFilm;
   },
-  methods: {
-    fetchFilm: function fetchFilm(uri) {
-      var _this = this;
-
-      var data = {
-        search: location.pathname.split("/")[2]
-      };
-      var form = new _utilities_Form__WEBPACK_IMPORTED_MODULE_0__["default"](data);
-      form.post(uri).then(function (res) {
-        _this.film = res[0];
-      })["catch"](function (error) {
-        console.log(error);
-      });
-    }
-  }
+  methods: {}
 });
 
 /***/ }),
@@ -20971,6 +20951,7 @@ var render = function() {
                   expression: "film_id"
                 }
               ],
+              attrs: { disabled: _vm.loading },
               on: {
                 change: function($event) {
                   var $$selectedVal = Array.prototype.filter
@@ -20987,16 +20968,26 @@ var render = function() {
                 }
               }
             },
-            _vm._l(_vm.films, function(film) {
-              return _c("option", { domProps: { value: film.id } }, [
-                _vm._v(
-                  "\n                        " +
-                    _vm._s(film.name) +
-                    "\n                    "
-                )
-              ])
-            }),
-            0
+            [
+              _vm.loading
+                ? _c("option", { domProps: { value: _vm.film.id } }, [
+                    _vm._v(" Loading...")
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              _vm._l(_vm.films, function(film) {
+                return !_vm.loading
+                  ? _c("option", { domProps: { value: film.id } }, [
+                      _vm._v(
+                        "\n                        " +
+                          _vm._s(film.name) +
+                          "\n                    "
+                      )
+                    ])
+                  : _vm._e()
+              })
+            ],
+            2
           )
         ])
       ]),
@@ -21269,6 +21260,7 @@ var render = function() {
                 expression: "actor.film_id"
               }
             ],
+            attrs: { disabled: _vm.loading },
             on: {
               change: function($event) {
                 var $$selectedVal = Array.prototype.filter
@@ -21287,16 +21279,26 @@ var render = function() {
               }
             }
           },
-          _vm._l(_vm.films, function(film) {
-            return _c("option", { domProps: { value: film.id } }, [
-              _vm._v(
-                "\n                    " +
-                  _vm._s(film.name) +
-                  "\n                "
-              )
-            ])
-          }),
-          0
+          [
+            _vm.loading
+              ? _c("option", { domProps: { value: _vm.actor.film_id } }, [
+                  _vm._v(" Loading...")
+                ])
+              : _vm._e(),
+            _vm._v(" "),
+            _vm._l(_vm.films, function(film) {
+              return !_vm.loading
+                ? _c("option", { domProps: { value: film.id } }, [
+                    _vm._v(
+                      "\n                    " +
+                        _vm._s(film.name) +
+                        "\n                "
+                    )
+                  ])
+                : _vm._e()
+            })
+          ],
+          2
         )
       ])
     ]),
@@ -22247,14 +22249,6 @@ var render = function() {
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "field" }, [
-        _c("label", { staticClass: "label" }, [_vm._v("Slug")]),
-        _vm._v(" "),
-        _c("div", { staticClass: "control" }, [
-          _c("span", [_vm._v(_vm._s(_vm.actor.slug))])
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "field" }, [
         _c("label", { staticClass: "label" }, [_vm._v("Film")]),
         _vm._v(" "),
         _c("span", [_vm._v(_vm._s(_vm.film.name))])
@@ -22316,14 +22310,6 @@ var render = function() {
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "field" }, [
-        _c("label", { staticClass: "label" }, [_vm._v("Slug")]),
-        _vm._v(" "),
-        _c("div", { staticClass: "control" }, [
-          _c("span", [_vm._v(_vm._s(_vm.film.slug))])
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "field" }, [
         _c("label", { staticClass: "label" }, [_vm._v("Description")]),
         _vm._v(" "),
         _c("div", { staticClass: "control" }, [
@@ -22341,7 +22327,7 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "control" }, [
-      _c("a", { staticClass: "button is-link", attrs: { href: "/actor" } }, [
+      _c("a", { staticClass: "button is-link", attrs: { href: "/film" } }, [
         _vm._v("Back")
       ])
     ])

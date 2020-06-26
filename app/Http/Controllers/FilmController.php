@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Film;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class FilmController extends Controller
 {
@@ -49,13 +50,19 @@ class FilmController extends Controller
     public function store(Request $request)
     {
         try {
+            $name = $request->input('name');
+            $slug = Str::slug($name);
+            $request->request->add(['slug' => $slug]);
+
             $validator = Validator::make($request->all(), [
                 'name' => 'required|unique:App\Film,name',
+                'slug' => 'unique:App\Film,slug',
                 'description' => 'required',
             ]);
 
             if ($validator->fails()) {
-                return response(['message' => "Error: Validation Failed!"], 200)
+                $error = $validator->errors()->first();
+                return response(['message' => "Error: Validation Failed! " . $error], 200)
                     ->header('Content-Type', 'application/json');
             }
 
@@ -107,13 +114,19 @@ class FilmController extends Controller
     public function update(Request $request, Film $film)
     {
         try {
+            $name = $request->input('name');
+            $slug = Str::slug($name);
+            $request->request->add(['slug' => $slug]);
+
             $validator = Validator::make($request->all(), [
-                'name' => 'required',
+                'name' => 'required|unique:App\Film,name',
+                'slug' => 'unique:App\Film,slug',
                 'description' => 'required'
             ]);
 
             if ($validator->fails()) {
-                return response(['message' => "Error: Validation Failed!"], 200)
+                $error = $validator->errors()->first();
+                return response(['message' => "Error: Validation Failed! " . $error], 200)
                     ->header('Content-Type', 'application/json');
             }
 

@@ -17,6 +17,10 @@
 <script>
     export default {
         props: {
+            currentList: {
+                required: false,
+                type: Object
+            },
             enableEdit : {
                 type: Boolean
             },
@@ -36,7 +40,8 @@
             }
         },
         created() {
-            this.fetchFilms("/list/film");
+            //this.fetchFilms("/list/film");
+            this.films = this.currentList;
         },
         methods: {
             fetchFilms(uri) {

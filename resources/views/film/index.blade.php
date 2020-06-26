@@ -10,10 +10,10 @@
     <div class="container">
         <input type="checkbox" class="hackbox liste" id="liste_anzeigen">
         <label class="liste" for="liste_anzeigen"></label>
-        <span class ="test">
-        <list-film v-bind:enable-edit="true" v-bind:enable-show="true"></list-film>
-        </span>
         <span class ="test2">
+        <list-film :current-list="{{ $film }}" v-bind:enable-edit="true" v-bind:enable-show="true"></list-film>
+        </span>
+        <span class ="test">
          <page-film class ="test" v-bind:enable-edit="true" v-bind:enable-show="true" ></page-film>
         </span>
     </div>

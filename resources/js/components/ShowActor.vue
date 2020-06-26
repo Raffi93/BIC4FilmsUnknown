@@ -8,12 +8,6 @@
                 </div>
             </div>
             <div class="field">
-                <label class="label">Slug</label>
-                <div class="control">
-                    <span>{{ actor.slug }}</span>
-                </div>
-            </div>
-            <div class="field">
                 <label class="label">Film</label>
                 <span>{{ film.name }}</span>
             </div>
@@ -34,6 +28,12 @@
     import Form from "../utilities/Form";
 
     export default {
+        props: {
+            currentActor: {
+                required: false,
+                type: Object
+            }
+        },
         data() {
             return {
                 actor: {
@@ -50,21 +50,10 @@
             }
         },
         created() {
-            this.fetchActor("/actor/actorbyslug");
+            this.actor = this.currentActor;
+            this.film = this.currentActor.film;
         },
         methods: {
-            fetchActor: function (uri) {
-                let data = {
-                    search: location.pathname.split("/")[2]
-                }
-                let form = new Form(data);
-                form.post(uri).then(res => {
-                    this.actor = res[0];
-                    this.film = res[0].film;
-                }).catch(error =>{
-                    console.log(error);
-                })
-            },
         }
     }
 </script>
